@@ -110,6 +110,9 @@ public class MainActivity extends BaseActivity {
                     intent.putExtra("log", doubles);
                     startActivity(intent);
                     Long.toBinaryString(Double.doubleToLongBits(0.01d));
+                }else{
+                    Intent intent = new Intent(MainActivity.this, SplitShowActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.btn_return:

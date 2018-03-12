@@ -14,6 +14,7 @@ import com.example.bsproperty.R;
 import com.example.bsproperty.adapter.BaseAdapter;
 import com.example.bsproperty.bean.ImagePiece;
 import com.example.bsproperty.utils.ImageSplitter;
+import com.example.bsproperty.utils.Logistic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +47,25 @@ public class SplitShowActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        Bitmap bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("path"));
-        Double[] doubles = (Double[]) getIntent().getSerializableExtra("log");
+//        Bitmap bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("path"));
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.test);
+
+        int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+
+        bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        for (int i = 0; i < pixels.length; i++) {
+            int clr = pixels[i];
+            int red = (clr & 0x00ff0000) >> 16;  //取高两位
+            int green = (clr & 0x0000ff00) >> 8; //取中两位
+            int blue = clr & 0x000000ff; //取低两位
+//            System.out.println("index="+i+"r=" + red + ",g=" + green + ",b=" + blue);
+
+        }
+
+
+        Double[] doubles = Logistic.getKey();
         List<ImagePiece> mItemBitmaps = ImageSplitter.split(bitmap, 8);
 
         for (int i = 0; i < mItemBitmaps.size(); i++) {
@@ -74,7 +92,7 @@ public class SplitShowActivity extends BaseActivity {
         public void initItemView(BaseViewHolder holder, ImagePiece imagePiece, int position) {
             ImageView imageView = (ImageView) holder.getView(R.id.iv_show);
             imageView.setImageBitmap(imagePiece.bitmap);
-            holder.setText(R.id.tv_log,imagePiece.log+"");
+            holder.setText(R.id.tv_log, imagePiece.log + "");
         }
     }
 }
