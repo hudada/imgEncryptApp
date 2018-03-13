@@ -3,10 +3,12 @@ package com.example.bsproperty.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -29,13 +31,11 @@ public class SplitShowActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        rvList.setLayoutManager(new GridLayoutManager(this, 8));
+        rvList.setLayoutManager(new GridLayoutManager(this, 32));
         rvList.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.right = 10;
-                outRect.bottom = 10;
             }
         });
     }
@@ -49,27 +49,47 @@ public class SplitShowActivity extends BaseActivity {
     protected void loadData() {
 //        Bitmap bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("path"));
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.test);
+
+        Bitmap bitmap;
+        TypedValue value = new TypedValue();
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inPreferredConfig = Bitmap.Config.ARGB_4444;
+        opts.inTargetDensity = value.density;
+        opts.inScaled = false;
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test, opts);
 
         int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
 
         bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-        for (int i = 0; i < pixels.length; i++) {
-            int clr = pixels[i];
-            int red = (clr & 0x00ff0000) >> 16;  //取高两位
-            int green = (clr & 0x0000ff00) >> 8; //取中两位
-            int blue = clr & 0x000000ff; //取低两位
+//        for (int i = 0; i < pixels.length; i++) {
+//            int clr = pixels[i];
+//            int red = (clr & 0x00ff0000) >> 16;  //取高两位
+//            int green = (clr & 0x0000ff00) >> 8; //取中两位
+//            int blue = clr & 0x000000ff; //取低两位
 //            System.out.println("index="+i+"r=" + red + ",g=" + green + ",b=" + blue);
+//        }
 
-        }
-
-
-        Double[] doubles = Logistic.getKey();
+        Double[] doubles = Logistic.getKey(9999998);
         List<ImagePiece> mItemBitmaps = ImageSplitter.split(bitmap, 8);
-
+        int[] pixels8 = new int[mItemBitmaps.get(0).bitmap.getWidth() * mItemBitmaps.get(0).bitmap.getHeight()];
         for (int i = 0; i < mItemBitmaps.size(); i++) {
-            mItemBitmaps.get(i).log = doubles[i];
+            Bitmap bitmap8 = mItemBitmaps.get(i).bitmap;
+//            mItemBitmaps.get(i).log = doubles[i];
+            if (i == 0) {
+                bitmap8.getPixels(pixels8, 0,
+                        bitmap8.getWidth(), 0, 0,
+                        bitmap8.getWidth(), bitmap8.getHeight());
+                for (int j = 0; j < pixels8.length; j++) {
+                    int clr = pixels8[j];
+                    int red = (clr & 0x00ff0000) >> 16;  //取高两位
+                    int green = (clr & 0x0000ff00) >> 8; //取中两位
+                    int blue = clr & 0x000000ff; //取低两位
+                    System.out.println("index=" + j +
+                            ",r=" + red + ",g=" + green + ",b=" + blue +
+                            ",color=" + bitmap8.getPixel(0, 0));
+                }
+            }
         }
 
         MyAdapter adapter = new MyAdapter(this, R.layout.item_show_split, (ArrayList<ImagePiece>) mItemBitmaps);
@@ -92,7 +112,11 @@ public class SplitShowActivity extends BaseActivity {
         public void initItemView(BaseViewHolder holder, ImagePiece imagePiece, int position) {
             ImageView imageView = (ImageView) holder.getView(R.id.iv_show);
             imageView.setImageBitmap(imagePiece.bitmap);
-            holder.setText(R.id.tv_log, imagePiece.log + "");
+
+            View ll_show = holder.getView(R.id.ll_show);
+            ll_show.setBackgroundColor(Color.RED);
+
+//            holder.setText(R.id.tv_log, imagePiece.log + "");
         }
     }
 }

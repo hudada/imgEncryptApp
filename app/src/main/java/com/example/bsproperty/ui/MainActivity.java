@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_do:
                 if (selectFile != null) {
-                    Double[] doubles = Logistic.getKey();
+                    Double[] doubles = Logistic.getKey(9999999);
                     Intent intent = new Intent(MainActivity.this, SplitShowActivity.class);
                     intent.putExtra("path", selectFile.getAbsolutePath());
                     intent.putExtra("log", doubles);

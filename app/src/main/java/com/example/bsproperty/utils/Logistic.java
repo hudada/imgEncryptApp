@@ -6,17 +6,17 @@ package com.example.bsproperty.utils;
 
 public class Logistic {
 
-    private static double u = 3.76;
-    private static Double x0 = 0.001;
-    private static int loop = 64;
+    private static double u = 4;
+    private static int loop = 8*8;
 
-    public static Double[] getKey() {
+    public static Double[] getKey(long key) {
 //    	x[k+1] = u*x[k]*(1-x[k])
-        Double[] key = new Double[loop];
-        key[0] = x0;
+        Double[] keys = new Double[loop];
+        Double x0 = key / Math.pow(10, 8);
+        keys[0] = x0;
         for (int i = 1; i < loop; i++) {
-            key[i] = u * key[i - 1] * (1 - key[i - 1]);
+            keys[i] = u * keys[i - 1] * (1 - keys[i - 1]);
         }
-        return key;
+        return keys;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.bsproperty.utils;
 
 import android.graphics.Bitmap;
+import android.os.Process;
 import android.util.Log;
 
 import com.example.bsproperty.bean.ImagePiece;
@@ -21,10 +22,12 @@ public class ImageSplitter {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
 
-        int pieceWidth = width / piece;
-        int pieceHeight = height / piece;
-        for (int i = 0; i < piece; i++) {
-            for (int j = 0; j < piece; j++) {
+        int loop = width / piece;
+
+        int pieceWidth = piece;
+        int pieceHeight = piece;
+        for (int i = 0; i < loop; i++) {
+            for (int j = 0; j < loop; j++) {
                 ImagePiece imagePiece = new ImagePiece();
                 imagePiece.index = j + i * piece;
                 int xValue = j * pieceWidth;
