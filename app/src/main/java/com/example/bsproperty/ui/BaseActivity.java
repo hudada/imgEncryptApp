@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.example.bsproperty.MyApplication;
 import com.example.bsproperty.view.ProgressDialog;
 
 import butterknife.ButterKnife;
@@ -26,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getRootViewId());
         unbinder = ButterKnife.bind(this);
+        MyApplication.getInstance().addAct(this);
         initView(savedInstanceState);
         loadData();
     }
@@ -33,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyApplication.getInstance().removeAct(this);
         unbinder.unbind();
     }
 

@@ -1,16 +1,22 @@
 package com.example.bsproperty.ui;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.bsproperty.R;
 import com.example.bsproperty.adapter.BaseAdapter;
@@ -80,6 +86,9 @@ public class SplitShowActivity extends BaseActivity {
                 bitmap8.getPixels(pixels8, 0,
                         bitmap8.getWidth(), 0, 0,
                         bitmap8.getWidth(), bitmap8.getHeight());
+                String ss = Long.toBinaryString(Double.doubleToLongBits(doubles[0]));
+                int ii = Integer.parseInt(ss);
+                int xx = ii ^ pixels8[0];
                 for (int j = 0; j < pixels8.length; j++) {
                     int clr = pixels8[j];
                     int red = (clr & 0x00ff0000) >> 16;  //取高两位
@@ -118,5 +127,10 @@ public class SplitShowActivity extends BaseActivity {
 
 //            holder.setText(R.id.tv_log, imagePiece.log + "");
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

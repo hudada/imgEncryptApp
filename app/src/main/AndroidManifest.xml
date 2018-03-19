@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".MyApplication"
@@ -33,7 +34,8 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".ui.SplitShowActivity"></activity>
+        <activity android:name=".ui.SplitShowActivity" />
+        <activity android:name=".ui.CrashDialogActivity" />
     </application>
 
 </manifest>
