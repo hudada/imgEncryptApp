@@ -27,7 +27,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mActList = new ArrayList<>();
-        CrashHanlder.getInstance().init(this);
+//        CrashHanlder.getInstance().init(this);
     }
 
     public static MyApplication getInstance() {

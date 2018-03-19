@@ -26,32 +26,19 @@ public class LQRPhotoSelectUtils {
     public static final int REQ_ZOOM_PHOTO = 5521;
 
     private Activity mActivity;
-    //拍照或剪切后图片的存放位置(参考file_provider_paths.xml中的路径)
     private String imgPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + String.valueOf(System.currentTimeMillis()) + ".jpg";
-    //FileProvider的主机名：一般是包名+".fileprovider"，严格上是build.gradle中defaultConfig{}中applicationId对应的值+".fileprovider"
     private String AUTHORITIES = "com.example.bsproperty" + ".fileprovider";
     private boolean mShouldCrop = false;//是否要裁剪（默认不裁剪）
     private Uri mOutputUri = null;
     private File mInputFile;
     private File mOutputFile = null;
 
-    //剪裁图片宽高比
     private int mAspectX = 1;
     private int mAspectY = 1;
-    //剪裁图片大小
-    private int mOutputX = 800;
-    private int mOutputY = 480;
+    private int mOutputX = 256;
+    private int mOutputY = 256;
     PhotoSelectListener mListener;
 
-    /**
-     * 可指定是否在拍照或从图库选取照片后进行裁剪
-     * <p>
-     * 默认裁剪比例1:1，宽度为800，高度为480
-     *
-     * @param activity   上下文
-     * @param listener   选取图片监听
-     * @param shouldCrop 是否裁剪
-     */
     public LQRPhotoSelectUtils(Activity activity, PhotoSelectListener listener, boolean shouldCrop) {
         mActivity = activity;
         mListener = listener;
@@ -60,16 +47,6 @@ public class LQRPhotoSelectUtils {
         imgPath = generateImgePath();
     }
 
-    /**
-     * 可以拍照或从图库选取照片后裁剪的比例及宽高
-     *
-     * @param activity 上下文
-     * @param listener 选取图片监听
-     * @param aspectX  图片裁剪时的宽度比例
-     * @param aspectY  图片裁剪时的高度比例
-     * @param outputX  图片裁剪后的宽度
-     * @param outputY  图片裁剪后的高度
-     */
     public LQRPhotoSelectUtils(Activity activity, PhotoSelectListener listener, int aspectX, int aspectY, int outputX, int outputY) {
         this(activity, listener, true);
         mAspectX = aspectX;
@@ -78,49 +55,20 @@ public class LQRPhotoSelectUtils {
         mOutputY = outputY;
     }
 
-    /**
-     * 设置FileProvider的主机名：一般是包名+".fileprovider"，严格上是build.gradle中defaultConfig{}中applicationId对应的值+".fileprovider"
-     * <p>
-     * 该工具默认是应用的包名+".fileprovider"，如项目build.gradle中defaultConfig{}中applicationId不是包名，则必须调用此方法对FileProvider的主机名进行设置，否则Android7.0以上使用异常
-     *
-     * @param authorities FileProvider的主机名
-     */
     public void setAuthorities(String authorities) {
         this.AUTHORITIES = authorities;
     }
 
-    /**
-     * 修改图片的存储路径（默认的图片存储路径是SD卡上 Android/data/应用包名/时间戳.jpg）
-     *
-     * @param imgPath 图片的存储路径（包括文件名和后缀）
-     */
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
     }
 
-    /**
-     * 拍照获取
-     */
     public void takePhoto() {
         File imgFile = new File(imgPath);
         if (!imgFile.getParentFile().exists()) {
             imgFile.getParentFile().mkdirs();
         }
         Uri imgUri = null;
-
-        //        if (Build.VERSION.SDK_INT >= 24) {//这里用这种传统的方法无法调起相机  
-        //            imgUri = FileProvider.getUriForFile(mActivity, AUTHORITIES, imgFile);  
-        //        } else {  
-        //            imgUri = Uri.fromFile(imgFile);  
-        //        }  
-        /* 
-        * 1.现象 
-            在项目中调用相机拍照和录像的时候，android4.x,Android5.x,Android6.x均没有问题,在Android7.x下面直接闪退 
-           2.原因分析 
-            Android升级到7.0后对权限又做了一个更新即不允许出现以file://的形式调用隐式APP，需要用共享文件的形式：content:// URI 
-           3.解决方案 
-            下面是打开系统相机的方法，做了android各个版本的兼容: 
-        * */
 
         if (Build.VERSION.SDK_INT < 24) {
             // 从文件中创建uri  
@@ -138,9 +86,6 @@ public class LQRPhotoSelectUtils {
         mActivity.startActivityForResult(intent, REQ_TAKE_PHOTO);
     }
 
-    /**
-     * 从图库获取
-     */
     public void selectPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -241,9 +186,6 @@ public class LQRPhotoSelectUtils {
         }
     }
 
-    /**
-     * 安卓7.0裁剪根据文件路径获取uri
-     */
     private Uri getImageContentUri(Context context, File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
@@ -269,18 +211,11 @@ public class LQRPhotoSelectUtils {
         }
     }
 
-    /**
-     * 产生图片的路径，带文件夹和文件名，文件名为当前毫秒数
-     */
     private String generateImgePath() {
         return getExternalStoragePath() + File.separator + String.valueOf(System.currentTimeMillis()) + ".jpg";
-        //        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + String.valueOf(System.currentTimeMillis()) + ".jpg";//测试用  
     }
 
 
-    /**
-     * 获取SD下的应用目录
-     */
     private String getExternalStoragePath() {
         StringBuilder sb = new StringBuilder();
         sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -295,9 +230,6 @@ public class LQRPhotoSelectUtils {
         void onFinish(File outputFile, Uri outputUri);
     }
 
-    /**
-     * 适配api19以上,根据uri获取图片的绝对路径
-     */
     private static String getRealPathFromUri_AboveApi19(Context context, Uri uri) {
         String filePath = null;
         if (DocumentsContract.isDocumentUri(context, uri)) {
@@ -341,10 +273,6 @@ public class LQRPhotoSelectUtils {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    /**
-     * 获取数据库表中的 _data 列，即返回Uri对应的文件路径
-     * @return
-     */
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         String path = null;
 
@@ -364,9 +292,6 @@ public class LQRPhotoSelectUtils {
         return path;
     }
 
-    /**
-     * 适配api11-api18,根据uri获取图片的绝对路径
-     */
     private static String getRealPathFromUri_Api11To18(Context context, Uri uri) {
         String filePath = null;
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -383,9 +308,6 @@ public class LQRPhotoSelectUtils {
         return filePath;
     }
 
-    /**
-     * 适配api11以下(不包括api11),根据uri获取图片的绝对路径
-     */
     private static String getRealPathFromUri_BelowApi11(Context context, Uri uri) {
         String filePath = null;
         String[] projection = { MediaStore.Images.Media.DATA };

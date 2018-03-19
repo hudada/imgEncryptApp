@@ -53,7 +53,6 @@ public class SplitShowActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-//        Bitmap bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("path"));
 
 
         Bitmap bitmap;
@@ -62,19 +61,14 @@ public class SplitShowActivity extends BaseActivity {
         opts.inPreferredConfig = Bitmap.Config.ARGB_4444;
         opts.inTargetDensity = value.density;
         opts.inScaled = false;
-        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test, opts);
+//        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test, opts);
+//        bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("path"), opts);
+        bitmap = getIntent().getParcelableExtra("path");
 
         int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
 
         bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
-//        for (int i = 0; i < pixels.length; i++) {
-//            int clr = pixels[i];
-//            int red = (clr & 0x00ff0000) >> 16;  //取高两位
-//            int green = (clr & 0x0000ff00) >> 8; //取中两位
-//            int blue = clr & 0x000000ff; //取低两位
-//            System.out.println("index="+i+"r=" + red + ",g=" + green + ",b=" + blue);
-//        }
 
         Double[] doubles = Logistic.getKey(9999998);
         List<ImagePiece> mItemBitmaps = ImageSplitter.split(bitmap, 8);
@@ -86,9 +80,9 @@ public class SplitShowActivity extends BaseActivity {
                 bitmap8.getPixels(pixels8, 0,
                         bitmap8.getWidth(), 0, 0,
                         bitmap8.getWidth(), bitmap8.getHeight());
-                String ss = Long.toBinaryString(Double.doubleToLongBits(doubles[0]));
-                int ii = Integer.parseInt(ss);
-                int xx = ii ^ pixels8[0];
+//                String ss = Long.toBinaryString(Double.doubleToLongBits(doubles[0]));
+//                int ii = Integer.parseInt(ss);
+//                int xx = ii ^ pixels8[0];
                 for (int j = 0; j < pixels8.length; j++) {
                     int clr = pixels8[j];
                     int red = (clr & 0x00ff0000) >> 16;  //取高两位
@@ -103,12 +97,7 @@ public class SplitShowActivity extends BaseActivity {
 
         MyAdapter adapter = new MyAdapter(this, R.layout.item_show_split, (ArrayList<ImagePiece>) mItemBitmaps);
         rvList.setAdapter(adapter);
-//                    Collections.sort(mItemBitmaps, new Comparator<ImagePiece>() {
-//                        @Override
-//                        public int compare(ImagePiece lhs, ImagePiece rhs) {
-//                            return Math.random() > 0.5 ? 1 : -1;
-//                        }
-//                    });
+
     }
 
     private class MyAdapter extends BaseAdapter<ImagePiece> {

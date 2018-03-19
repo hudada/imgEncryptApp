@@ -46,15 +46,16 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.ll_show)
     LinearLayout llShow;
     private LQRPhotoSelectUtils mLqrPhotoSelectUtils;
-    private File selectFile;
+    private Bitmap selectBitmap;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         mLqrPhotoSelectUtils = new LQRPhotoSelectUtils(this, new LQRPhotoSelectUtils.PhotoSelectListener() {
             @Override
             public void onFinish(File outputFile, Uri outputUri) {
-                selectFile = outputFile;
-                Glide.with(MainActivity.this).load(outputUri).into(ivShow);
+                Bitmap bitmap = BitmapFactory.decodeFile(outputFile.getAbsolutePath());
+                selectBitmap = Bitmap.createBitmap(bitmap,0,0,256,256);
+                ivShow.setImageBitmap(selectBitmap);
             }
         }, false);
     }
@@ -103,14 +104,12 @@ public class MainActivity extends BaseActivity {
                 }).show();
                 break;
             case R.id.btn_do:
-                if (selectFile != null) {
+                if (selectBitmap != null) {
                     Intent intent = new Intent(MainActivity.this, SplitShowActivity.class);
-                    intent.putExtra("path", selectFile.getAbsolutePath());
+                    intent.putExtra("path", selectBitmap);
                     startActivity(intent);
-                    Long.toBinaryString(Double.doubleToLongBits(0.01d));
                 }else{
-                    Intent intent = new Intent(MainActivity.this, SplitShowActivity.class);
-                    startActivity(intent);
+                    showToast(MainActivity.this,"请选择图片");
                 }
                 break;
             case R.id.btn_return:
