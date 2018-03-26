@@ -3,14 +3,7 @@ package com.example.bsproperty;
 import android.app.Application;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.bsproperty.utils.CrashHanlder;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
-
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
 
 /**
  * Created by yezi on 2018/1/27.
@@ -27,7 +20,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mActList = new ArrayList<>();
-//        CrashHanlder.getInstance().init(this);
     }
 
     public static MyApplication getInstance() {

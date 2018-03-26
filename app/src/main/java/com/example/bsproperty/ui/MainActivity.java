@@ -54,8 +54,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onFinish(File outputFile, Uri outputUri) {
                 Bitmap bitmap = BitmapFactory.decodeFile(outputFile.getAbsolutePath());
-                selectBitmap = Bitmap.createBitmap(bitmap,0,0,256,256);
-                ivShow.setImageBitmap(selectBitmap);
+                try{
+                    selectBitmap = Bitmap.createBitmap(bitmap,0,0,256,256);
+                    ivShow.setImageBitmap(selectBitmap);
+                }catch (Exception e){
+                    showToast(MainActivity.this,"图片需大于等于256*256");
+                }
+
             }
         }, false);
     }
