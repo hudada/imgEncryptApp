@@ -70,29 +70,24 @@ public class SplitShowActivity extends BaseActivity {
         bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
 
-        Double[] doubles = Logistic.getKey(9999998);
+        int[] doubles = Logistic.getKey(9999998);
         List<ImagePiece> mItemBitmaps = ImageSplitter.split(bitmap, 8);
         int[] pixels8 = new int[mItemBitmaps.get(0).bitmap.getWidth() * mItemBitmaps.get(0).bitmap.getHeight()];
+        int[] pixels8c = new int[pixels8.length];
         for (int i = 0; i < mItemBitmaps.size(); i++) {
             Bitmap bitmap8 = mItemBitmaps.get(i).bitmap;
-//            mItemBitmaps.get(i).log = doubles[i];
-            if (i == 0) {
+//            if (i == 0) {
                 bitmap8.getPixels(pixels8, 0,
                         bitmap8.getWidth(), 0, 0,
                         bitmap8.getWidth(), bitmap8.getHeight());
-//                String ss = Long.toBinaryString(Double.doubleToLongBits(doubles[0]));
-//                int ii = Integer.parseInt(ss);
-//                int xx = ii ^ pixels8[0];
-                for (int j = 0; j < pixels8.length; j++) {
-                    int clr = pixels8[j];
-                    int red = (clr & 0x00ff0000) >> 16;  //取高两位
-                    int green = (clr & 0x0000ff00) >> 8; //取中两位
-                    int blue = clr & 0x000000ff; //取低两位
-                    System.out.println("index=" + j +
-                            ",r=" + red + ",g=" + green + ",b=" + blue +
-                            ",color=" + bitmap8.getPixel(0, 0));
+                for (int i1 = 0; i1 < pixels8.length; i1++) {
+                    int xx = doubles[i1] ^ pixels8[i1];
+                    pixels8c[i1] = xx;
                 }
-            }
+
+                bitmap8.setPixels(pixels8c, 0, bitmap8.getWidth(), 0, 0, bitmap8.getWidth(), bitmap8.getHeight());
+
+//            }
         }
 
         MyAdapter adapter = new MyAdapter(this, R.layout.item_show_split, (ArrayList<ImagePiece>) mItemBitmaps);
@@ -112,7 +107,7 @@ public class SplitShowActivity extends BaseActivity {
             imageView.setImageBitmap(imagePiece.bitmap);
 
             View ll_show = holder.getView(R.id.ll_show);
-            ll_show.setBackgroundColor(Color.RED);
+//            ll_show.setBackgroundColor(Color.RED);
 
 //            holder.setText(R.id.tv_log, imagePiece.log + "");
         }

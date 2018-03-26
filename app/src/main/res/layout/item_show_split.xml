@@ -17,16 +17,4 @@
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:visibility="gone" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorAccent" />
-
-    <View
-        android:layout_width="1dp"
-        android:layout_height="3dp"
-        android:layout_alignParentRight="true"
-        android:background="@color/colorAccent" />
 </RelativeLayout>
