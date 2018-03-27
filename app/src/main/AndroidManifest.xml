@@ -35,6 +35,7 @@
         </provider>
 
         <activity android:name=".ui.SplitShowActivity" />
+        <activity android:name=".ui.Main2Activity"></activity>
     </application>
 
 </manifest>

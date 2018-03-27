@@ -16,16 +16,15 @@
             android:layout_centerInParent="true"
             android:textSize="22sp"
             android:textColor="@color/white"
-            android:text="图片加密"/>
+            android:text="图片解密"/>
         <Button
             android:id="@+id/btn_return"
             android:background="@null"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="解密 ->" />
+            android:text="返回" />
     </RelativeLayout>
 
     <LinearLayout
@@ -60,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="加密" />
+                android:text="解密" />
 
 
         </LinearLayout>
